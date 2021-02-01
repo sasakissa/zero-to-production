@@ -13,7 +13,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 # Builder stage
 FROM rust:1.47 as builder 
 WORKDIR app
-COPY --from=cacher /app/target/target target
+COPY --from=cacher /app/target target
 COPY --from=cacher /usr/local/cargo /usr/local/cargo
 COPY . .
 ENV SQLX_OFFLINE true
