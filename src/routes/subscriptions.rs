@@ -1,7 +1,6 @@
-use actix_web::{error::InternalError, web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::{query, PgPool};
-use tracing_futures::Instrument;
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]

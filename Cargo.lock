@@ -695,6 +695,9 @@ name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
+dependencies = [
+ "serde 1.0.123",
+]
 
 [[package]]
 name = "encoding_rs"
@@ -2009,6 +2012,7 @@ version = "1.0.61"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fceb2595057b6891a4ee808f70054bd2d12f0e97f1cbb78689b59f676df325a"
 dependencies = [
+ "indexmap",
  "itoa",
  "ryu",
  "serde 1.0.123",
@@ -2171,6 +2175,7 @@ dependencies = [
  "percent-encoding",
  "rand 0.7.3",
  "rustls",
+ "serde 1.0.123",
  "sha-1",
  "sha2",
  "smallvec",
@@ -2196,9 +2201,12 @@ dependencies = [
  "either",
  "futures",
  "heck",
+ "hex",
  "lazy_static",
  "proc-macro2",
  "quote",
+ "serde 1.0.123",
+ "serde_json",
  "sha2",
  "sqlx-core",
  "sqlx-rt",

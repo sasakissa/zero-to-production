@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-use sqlx::PgPool;
+use sqlx::{postgres::PgPoolOptions, PgPool};
 use tracing::{subscriber::set_global_default, Subscriber};
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
 use tracing_log::LogTracer;
@@ -15,11 +15,16 @@ use zero2prod::{
 async fn main() -> std::io::Result<()> {
     // Redirect all 'log' events to our subscriber
     let configuration = get_configuration().expect("Failed to load configuration.");
-    let connection_pool = PgPool::connect(&configuration.database.connection_string())
+    let connection_pool = PgPoolOptions::new()
+        .connect_timeout(std::time::Duration::from_secs(2))
+        .connect(&configuration.database.connection_string())
         .await
         .expect("Failed to connect postgres. ");
-    let listener = TcpListener::bind(format!("127.0.0.1:{}", configuration.application_port))
-        .expect("Faild to bind");
+    let listener = TcpListener::bind(format!(
+        "{}:{}",
+        configuration.application.host, configuration.application.port
+    ))
+    .expect("Faild to bind");
     let port = listener.local_addr().unwrap().port();
 
     let subscriber = get_subscriber("zero2prod".into(), "info".into());
