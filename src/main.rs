@@ -7,6 +7,7 @@ use tracing_log::LogTracer;
 use tracing_subscriber::{prelude::__tracing_subscriber_SubscriberExt, EnvFilter, Registry};
 use zero2prod::{
     configurations::get_configuration,
+    email_client::EmailClient,
     startup::run,
     telemetry::{get_subscriber, init_subscriber},
 };
@@ -20,6 +21,13 @@ async fn main() -> std::io::Result<()> {
         .connect_with(configuration.database.with_db())
         .await
         .expect("Failed to connect postgres. ");
+
+    let sender_email = configuration
+        .email_client
+        .sender()
+        .expect("Invalid sender email address.");
+    let email_client = EmailClient::new(configuration.email_client.base_url, sender_email);
+
     let listener = TcpListener::bind(format!(
         "{}:{}",
         configuration.application.host, configuration.application.port
@@ -31,5 +39,5 @@ async fn main() -> std::io::Result<()> {
     init_subscriber(subscriber);
 
     println!("start subscribe 127.0.0.1:8000");
-    run(listener, connection_pool)?.await
+    run(listener, connection_pool, email_client)?.await
 }

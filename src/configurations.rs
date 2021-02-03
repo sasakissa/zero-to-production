@@ -5,10 +5,13 @@ use sqlx::{
 };
 use std::convert::{TryFrom, TryInto};
 
+use crate::{domain::SubscriberEmail, email_client::EmailClient};
+
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: ApplicationSettings,
+    pub email_client: EmialClientSettings,
 }
 #[derive(serde::Deserialize)]
 pub struct ApplicationSettings {
@@ -44,6 +47,17 @@ impl DatabaseSettings {
             .ssl_mode(ssl_mode)
             .username(&self.username)
             .password(&self.password)
+    }
+}
+#[derive(serde::Deserialize)]
+pub struct EmialClientSettings {
+    pub base_url: String,
+    pub sender_email: String,
+}
+
+impl EmialClientSettings {
+    pub fn sender(&self) -> Result<SubscriberEmail, String> {
+        SubscriberEmail::parse(self.sender_email.clone())
     }
 }
 
