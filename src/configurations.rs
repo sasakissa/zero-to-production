@@ -53,6 +53,7 @@ impl DatabaseSettings {
 pub struct EmialClientSettings {
     pub base_url: String,
     pub sender_email: String,
+    pub authorization_token: String,
 }
 
 impl EmialClientSettings {
